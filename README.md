@@ -10,18 +10,17 @@ all of ISO 8601 is handled.
 
 Currently the following formats are handled:
 
-* 2006-01-01T00:00:00Z
-* 2006-01-01T00:00:00[+-]00:00
-* 2006-01-01T00:00:00[+-]00
-
-I'll add more as I encounter them in my day to day life. Patches with 
-new formats and tests will be gratefully accepted of course :)
+* YYYY
+* YYYY-MM
+* YYYY-MM-DD
+* YYYY-MM-DDThh:mmTZD
+* YYYY-MM-DDThh:mm:ssTZD
+* YYYY-MM-DDThh:mm:ss.sTZD
 
 References:
 
-* http://www.cl.cam.ac.uk/~mgk25/iso-time.html - simple overview
+* [W3C](http://www.w3.org/TR/NOTE-datetime)
 
-* http://hydracen.com/dx/iso8601.htm - more detailed enumeration of
-  valid formats.
+* [Simple overview](http://www.cl.cam.ac.uk/~mgk25/iso-time.html)
 
 See the LICENSE file for the license this package is released under.
