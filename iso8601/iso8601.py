@@ -127,8 +127,8 @@ def parse_date(datestring, default_timezone=UTC):
     
     return datetime(
         int(groups["year"]),
-        int(groups["month"]),
-        int(groups["day"]),
+        int(groups["month"] or 1),
+        int(groups["day"] or 1),
         int(groups["hour"]),
         int(groups["minute"]),
         int(groups["second"]),
