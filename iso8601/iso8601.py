@@ -55,7 +55,6 @@ class ParseError(Exception):
 
 ZERO = timedelta(0)
 
-
 class Utc(tzinfo):
     def utcoffset(self, dt):
         return ZERO
@@ -91,25 +90,15 @@ class FixedOffset(tzinfo):
 
 def parse_timezone(tzstring, default_timezone=UTC):
     """Parses ISO 8601 time zone specs into tzinfo offsets"""
-
-    if tzstring == "Z":
-        return default_timezone
-
-    # This isn't strictly correct, but it's common to encounter dates without
-    # timezones so I'll assume the default (which defaults to UTC).
-    # Addresses issue 4.
-    if tzstring is None:
+    # This isn't strictly correct when a time is included (according to the ISO
+    # standard), but we don't know here if the time is included.
+    if tzstring == "Z" or tzstring is None:
         return default_timezone
 
     m = TIMEZONE_REGEX.match(tzstring)
     prefix, hours, minutes = m.groups()
-
     hours = int(hours)
-
-    if minutes is not None:
-        minutes = int(minutes)
-    else:
-        minutes = 0
+    minutes = int(minutes) if minutes is not None else 0
 
     if prefix == "-":
         hours = -hours
@@ -121,43 +110,35 @@ def parse_timezone(tzstring, default_timezone=UTC):
 def parse_date(datestring, default_timezone=UTC):
     """Parses ISO 8601 dates into datetime objects
     
-    The timezone is parsed from the date string. However it is quite common to
-    have dates without a timezone (not strictly correct). In this case the
-    default timezone specified in default_timezone is used. This is UTC by
-    default.
+    The timezone is parsed from the date string. However it is quite
+    common to have dates without a timezone (not strictly correct). In
+    this case the default timezone specified in default_timezone is
+    used. This is UTC by default.
     """
-
     if not isinstance(datestring, basestring):
-        raise ParseError("Expecting a string %r" % datestring)
+        raise ParseError("Expecting a string {0!r}".format(datestring))
 
     m = ISO8601_REGEX.match(datestring)
 
     if not m:
-        raise ParseError("Unable to parse date string %r" % datestring)
+        raise ParseError("Unable to parse date string {0!r}".format(datestring))
 
     groups = m.groupdict()
     tz = parse_timezone(groups["timezone"], default_timezone=default_timezone)
 
-    if groups['hour'] is None: 
-        groups['hour'] = '0'
-    
-    if groups['minute'] is None:
-        groups['minute'] = '0'
-    
-    if groups['second'] is None:
-        groups['second'] = '0'
-    
     if groups["fraction"] is None:
-        groups["fraction"] = 0
+        fraction = 0
     else:
-        groups["fraction"] = int(float("0.%s" % groups["fraction"]) * 1e6)
+        fraction = int(float("0.{0}".format(groups["fraction"])) * 1e6)
     
+    default = lambda k, d=0: int(groups[k]) if groups[k] is not None else d
+
     return datetime(
-        int(groups["year"]),
-        int(groups["month"] or 1),
-        int(groups["day"] or 1),
-        int(groups["hour"]),
-        int(groups["minute"]),
-        int(groups["second"]),
-        int(groups["fraction"]),
+        default('year'),
+        default('month', 1),
+        default('day', 1),
+        default('hour'),
+        default('minute'),
+        default('second'),
+        fraction,
         tz)

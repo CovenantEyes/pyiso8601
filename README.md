@@ -23,4 +23,9 @@ References:
 
 * [Simple overview](http://www.cl.cam.ac.uk/~mgk25/iso-time.html)
 
+Run tests with
+
+    cd iso8601
+    nosetests
+
 See the LICENSE file for the license this package is released under.
