@@ -101,6 +101,21 @@ class TestInvalid(unittest.TestCase):
     
     def test_invalid_date(self):
         self.assertRaises(iso8601.ParseError, iso8601.parse_date, "23")
+
+    def test_invalid_second(self):
+        self.assertRaises(iso8601.ParseError, iso8601.parse_date, "2006-10-20T15:34:562Z")
+
+    def test_invalid_minute(self):
+        self.assertRaises(iso8601.ParseError, iso8601.parse_date, "2006-10-20T15:342:56Z")
+
+    def test_invalid_hour(self):
+        self.assertRaises(iso8601.ParseError, iso8601.parse_date, "2006-10-20T152:34:56Z")
+
+    def test_invalid_day(self):
+        self.assertRaises(iso8601.ParseError, iso8601.parse_date, "2006-10-202T15:34:56Z")
+
+    def test_invalid_month(self):
+        self.assertRaises(iso8601.ParseError, iso8601.parse_date, "2006-102-20T15:34:56Z")
     
 
 if __name__ == '__main__':

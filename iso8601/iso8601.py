@@ -15,13 +15,13 @@ __all__ = ["parse_date", "ParseError"]
 
 # Adapted from http://delete.me.uk/2005/03/iso8601.html
 ISO8601_REGEX = re.compile('''
-    (?P<year>[0-9]{4})
+    ^(?P<year>[0-9]{4})
     (-
-        (?P<month>[0-9]{1,2})
+        (?P<month>[0-9]{2})
         (-
-            (?P<day>[0-9]{1,2})
+            (?P<day>[0-9]{2})
             (
-                (?P<separator>.)
+                T
                 (?P<hour>[0-9]{2})
                 :
                 (?P<minute>[0-9]{2})
@@ -38,7 +38,7 @@ ISO8601_REGEX = re.compile('''
                 )?
             )?
         )?
-    )?
+    )?$
 ''', re.VERBOSE)
 
 TIMEZONE_REGEX = re.compile('''
